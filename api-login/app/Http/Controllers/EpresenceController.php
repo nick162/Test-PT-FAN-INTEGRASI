@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Epresence;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class EpresenceController extends Controller
 {
@@ -25,7 +24,7 @@ class EpresenceController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -41,40 +40,40 @@ class EpresenceController extends Controller
     public function out(Request $request)
     {
         $validateData = $request->validate([
-            'type'=>'required',
-            'waktu'=>'required',
+            'type' => 'required',
+            'waktu' => 'required',
         ]);
 
         $epresence = Epresence::create([
-            'id_users'=>$request->user()->id,
-            'type'=>$request->type,
-            'is_approve'=>'FALSE',
-            'waktu'=>$request->waktu
+            'id_users' => $request->user()->id,
+            'type' => $request->type,
+            'is_approve' => 'FALSE',
+            'waktu' => $request->waktu,
         ]);
 
         return response()->json([
-            'type'=>$request->type,
-            'waktu'=>$request->waktu
+            'type' => $request->type,
+            'waktu' => $request->waktu,
         ]);
 
     }
     public function in(Request $request)
     {
         $validateData = $request->validate([
-            'type'=>'required',
-            'waktu'=>'required',
+            'type' => 'required',
+            'waktu' => 'required',
         ]);
 
         $epresence = Epresence::create([
-            'id_users'=>$request->user()->id,
-            'type'=>$request->type,
-            'is_approve'=>'TRUE',
-            'waktu'=>$request->waktu
+            'id_users' => $request->user()->id,
+            'type' => $request->type,
+            'is_approve' => 'TRUE',
+            'waktu' => $request->waktu,
         ]);
 
         return response()->json([
-            'type'=>$request->type,
-            'waktu'=>$request->waktu
+            'type' => $request->type,
+            'waktu' => $request->waktu,
         ]);
 
     }
@@ -88,59 +87,61 @@ class EpresenceController extends Controller
     public function show(Epresence $epresence)
     {
         // $data = DB::table('epresences')->join('users', 'epresences.id_users', '=', 'users.id')->select('*')->groupBy('epresences.type')->get();
-        $in = $epresence->join('users', 'epresences.id_users', '=', 'users.id')->where('epresences.type','=','IN')->latest('epresences.id')->first();
-        $out = $epresence->join('users', 'epresences.id_users', '=', 'users.id')->where('epresences.type','=','OUT')->where('epresences.is_approve','=','FALSE')->latest('epresences.id')->first();
-        $approve = $epresence->join('users', 'epresences.id_users', '=', 'users.id')->where('epresences.type','=','OUT')->where('epresences.is_approve','=','TRUE')->latest('epresences.id')->first();
-        $inapprove = ($in->is_approve == 'TRUE')?'Approve':'Reject';
-        $outapprove = ($out->is_approve == 'TRUE')?'Approve':'Reject';
-        $outapprovetrue = ($approve->is_approve == 'TRUE')?'Approve':'Reject';
-        $date = date('Y-m-d',strtotime($in->waktu));
-        $timeIn = date('H:i:s',strtotime($in->waktu));
-        $timeOut = date('H:i:s',strtotime($out->waktu));
-        $timeOutApprove = date('H:i:s',strtotime($approve->waktu));
+        $in = $epresence->join('users', 'epresences.id_users', '=', 'users.id')->where('epresences.type', '=', 'IN')->latest('epresences.id')->first();
+        $out = $epresence->join('users', 'epresences.id_users', '=', 'users.id')->where('epresences.type', '=', 'OUT')->where('epresences.is_approve', '=', 'FALSE')->latest('epresences.id')->first();
+        $approve = $epresence->join('users', 'epresences.id_users', '=', 'users.id')->where('epresences.type', '=', 'OUT')->where('epresences.is_approve', '=', 'TRUE')->latest('epresences.id')->first();
+        $inapprove = ($in->is_approve == 'TRUE') ? 'Approve' : 'Reject';
+        $outapprove = ($out->is_approve == 'TRUE') ? 'Approve' : 'Reject';
+        $outapprovetrue = ($approve->is_approve == 'TRUE') ? 'Approve' : 'Reject';
+        $date = date('Y-m-d', strtotime($in->waktu));
+        $timeIn = date('H:i:s', strtotime($in->waktu));
+        $timeOut = date('H:i:s', strtotime($out->waktu));
+        $timeOutApprove = date('H:i:s', strtotime($approve->waktu));
         // $out = Epresence::where('id_users','=',1)->where('type','=','OUT')->last();
         return response()->json([
             // 'data'=> $in
-            "data"=>[
+            'status_code' => 200,
+            'message' => "Success get data",
+            "data" => [
                 [
 
-                "id_users"=> $in->id_users,
-                "nama_user"=> $in->nama,
-                "tanggal"=> $date,
-                "waktu masuk"=> $timeIn,
-                "waktu pulang"=> $timeOut,
-                "status_masuk"=> $inapprove,
-                "status_pulang"=> $outapprove
+                    "id_users" => $in->id_users,
+                    "nama_user" => $in->nama,
+                    "tanggal" => $date,
+                    "waktu masuk" => $timeIn,
+                    "waktu pulang" => $timeOut,
+                    "status_masuk" => $inapprove,
+                    "status_pulang" => $outapprove,
+                ],
+                [
+                    "id_users" => $in->id_users,
+                    "nama_user" => $in->nama,
+                    "waktu masuk" => $timeIn,
+                    "waktu pulang" => $timeOutApprove,
+                    "status_masuk" => $inapprove,
+                    "status_pulang" => $outapprovetrue,
+
+                ],
+
             ],
-            [
-                "id_users"=> $in->id_users,
-                "nama_user"=> $in->nama,
-                "waktu masuk"=> $timeIn,
-                "waktu pulang"=> $timeOutApprove,
-                "status_masuk"=> $inapprove,
-                "status_pulang"=> $outapprovetrue
-
-            ]
-
-            
-            ]
         ]);
     }
 
-    public function test(Request $request){
+    public function approve(Request $request)
+    {
         $validateData = $request->validate([
-            'id_users'=>'required',
-            'type'=>'required',
-            'waktu'=>'required',
+            'id_users' => 'required',
+            'type' => 'required',
+            'waktu' => 'required',
         ]);
 
         $epresence = Epresence::create([
-            'id_users'=>$request->id_users,
-            'type'=>$request->type,
-            'is_approve'=>'TRUE',
-            'waktu'=>$request->waktu
+            'id_users' => $request->id_users,
+            'type' => $request->type,
+            'is_approve' => 'TRUE',
+            'waktu' => $request->waktu,
         ]);
-        return response()->json(['data'=>$epresence]);
+        return response()->json(['data' => $epresence]);
     }
     /**
      * Show the form for editing the specified resource.

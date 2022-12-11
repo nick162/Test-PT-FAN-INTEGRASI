@@ -24,5 +24,5 @@ Route::group(['prefix'=> 'auth', 'middleware'=>'auth:sanctum'], function (){
     Route::apiResource('/absen',App\Http\Controllers\EpresenceController::class);
     Route::post('in', [EpresenceController::class,'in'])->name('in');
     Route::post('out', [EpresenceController::class,'out'])->name('out');
-    Route::post('test/', [EpresenceController::class,'test'])->name('test');
+    Route::post('approve/', [EpresenceController::class,'approve'])->name('approve');
 });

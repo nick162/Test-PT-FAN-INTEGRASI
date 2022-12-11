@@ -1,0 +1,8 @@
+Project Laravel API LOGIN in folder api-login
+Logic Test in folder Logic Tes
+API_URL
+POST URL LOGIN = http://127.0.0.1:8000/api/login     payload {email, password}
+GET DATA URL = http://127.0.0.1:8000/api/auth/absen/1
+POST URL ABSEN MASUK = http://127.0.0.1:8000/api/auth/in    payload {type,waktu}
+POST URL ABSEN KELUAR = http://127.0.0.1:8000/api/auth/out   payload {type,waktu}
+POST URL APPROVE BY SUPERVISIOR = http://127.0.0.1:8000/api/auth/approve/   payload {id_users, type, waktu}
